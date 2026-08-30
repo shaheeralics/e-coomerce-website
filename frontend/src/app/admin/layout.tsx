@@ -16,7 +16,7 @@ export default function AdminLayout({
   const [isDbOnline, setIsDbOnline] = useState(true);
   const { user, loading } = useAuth();
   const pathname = usePathname();
-  const isLoginPage = pathname === '/admin/login';
+  const isLoginPage = pathname?.startsWith('/admin/login') || false;
 
   useEffect(() => {
     if (isLoginPage) return;
