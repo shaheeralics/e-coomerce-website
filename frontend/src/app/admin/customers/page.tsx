@@ -7,6 +7,8 @@ export const metadata = {
   description: 'View registered customers directory and their shopping activity logs.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminCustomersPage() {
   const customers = await getDbCustomersSummary();
 
