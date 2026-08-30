@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  console.log('MIDDLEWARE RUNNING FOR PATH:', pathname);
 
   // Check for the admin session cookie
   const adminSession = request.cookies.get('admin_session')?.value;

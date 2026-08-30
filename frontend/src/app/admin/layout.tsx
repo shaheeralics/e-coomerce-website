@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LayoutDashboard, ShoppingCart, Package, ArrowUpRight, ShieldCheck, Database, LogOut, Users, MapPin, ClipboardList } from 'lucide-react';
 import { customerLogoutAction } from '@/lib/auth-actions';
+import { useAuth } from '@/lib/context/auth-context';
 
 export default function AdminLayout({
   children,
@@ -11,6 +12,13 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [isDbOnline, setIsDbOnline] = useState(true);
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && (!user || user.role !== 'admin')) {
+      window.location.href = '/login';
+    }
+  }, [user, loading]);
 
   // Check database status using backend health/shoes fetch on mount
   useEffect(() => {
@@ -33,6 +41,14 @@ export default function AdminLayout({
     { label: 'Store Locations', href: '/admin/store-locations', icon: MapPin },
     { label: 'Customers', href: '/admin/customers', icon: Users },
   ];
+
+  if (loading || !user || user.role !== 'admin') {
+    return (
+      <div className="flex h-screen items-center justify-center bg-neutral-900 text-neutral-400 font-black text-[10px] tracking-widest uppercase">
+        <span className="animate-pulse">Authorizing...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-neutral-900 text-neutral-100 overflow-hidden font-sans">
