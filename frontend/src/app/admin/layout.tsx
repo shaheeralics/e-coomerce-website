@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LayoutDashboard, ShoppingCart, Package, ArrowUpRight, ShieldCheck, Database, LogOut, Users, MapPin, ClipboardList } from 'lucide-react';
-import { adminLogoutAction } from './login/actions';
+import { customerLogoutAction } from '@/lib/auth-actions';
 
 export default function AdminLayout({
   children,
@@ -74,7 +74,7 @@ export default function AdminLayout({
 
           {/* Logout Button */}
           <button
-            onClick={() => adminLogoutAction()}
+            onClick={() => customerLogoutAction()}
             className="w-full flex items-center justify-between px-4 py-2.5 bg-neutral-950 hover:bg-red-950/40 hover:text-red-400 hover:border-red-900/60 text-[10px] font-bold uppercase tracking-wider text-neutral-400 border border-neutral-800 transition-colors cursor-pointer"
           >
             <span>Logout Control</span>
