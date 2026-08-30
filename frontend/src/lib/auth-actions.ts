@@ -75,7 +75,7 @@ export async function customerLoginAction(prevState: any, formData: FormData) {
 
     if (typeof window !== 'undefined') {
       if (json.user && json.user.role === 'admin') {
-        window.location.href = '/admin';
+        window.location.href = '/';
       } else {
         window.location.href = '/profile';
       }

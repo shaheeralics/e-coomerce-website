@@ -10,18 +10,9 @@ export function middleware(request: NextRequest) {
 
   // If path is under /admin
   if (pathname.startsWith('/admin')) {
-    // Exclude /admin/login from authentication check to prevent redirect loops
-    if (pathname === '/admin/login') {
-      // If already logged in, redirect away from login page to dashboard overview
-      if (isAuthenticated) {
-        return NextResponse.redirect(new URL('/admin', request.url));
-      }
-      return NextResponse.next();
-    }
-
-    // If not authenticated, redirect to the admin login page
+    // If not authenticated, redirect to the main login page
     if (!isAuthenticated) {
-      const loginUrl = new URL('/admin/login', request.url);
+      const loginUrl = new URL('/login', request.url);
       return NextResponse.redirect(loginUrl);
     }
   }
