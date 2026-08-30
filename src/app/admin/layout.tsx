@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LayoutDashboard, ShoppingCart, Package, ArrowUpRight, ShieldCheck, Database, LogOut, Users, MapPin, ClipboardList } from 'lucide-react';
-import { adminLogoutAction } from './login/actions';
+import { customerLogoutAction } from '@/lib/auth-actions';
+import { useAuth } from '@/lib/context/auth-context';
+
+import { usePathname } from 'next/navigation';
 
 export default function AdminLayout({
   children,
@@ -11,6 +14,16 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const [isDbOnline, setIsDbOnline] = useState(true);
+  const { user, loading } = useAuth();
+  const pathname = usePathname();
+  const isLoginPage = pathname?.startsWith('/admin/login') || false;
+
+  useEffect(() => {
+    if (isLoginPage) return;
+    if (!loading && (!user || user.role !== 'admin')) {
+      window.location.href = '/login';
+    }
+  }, [user, loading, isLoginPage]);
 
   // Check database status using backend health/shoes fetch on mount
   useEffect(() => {
@@ -33,6 +46,18 @@ export default function AdminLayout({
     { label: 'Store Locations', href: '/admin/store-locations', icon: MapPin },
     { label: 'Customers', href: '/admin/customers', icon: Users },
   ];
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
+  if (loading || !user || user.role !== 'admin') {
+    return (
+      <div className="flex h-screen items-center justify-center bg-neutral-900 text-neutral-400 font-black text-[10px] tracking-widest uppercase">
+        <span className="animate-pulse">Authorizing...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-neutral-900 text-neutral-100 overflow-hidden font-sans">
@@ -74,7 +99,7 @@ export default function AdminLayout({
 
           {/* Logout Button */}
           <button
-            onClick={() => adminLogoutAction()}
+            onClick={() => customerLogoutAction()}
             className="w-full flex items-center justify-between px-4 py-2.5 bg-neutral-950 hover:bg-red-950/40 hover:text-red-400 hover:border-red-900/60 text-[10px] font-bold uppercase tracking-wider text-neutral-400 border border-neutral-800 transition-colors cursor-pointer"
           >
             <span>Logout Control</span>
