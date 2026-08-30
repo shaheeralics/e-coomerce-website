@@ -39,19 +39,19 @@ export async function initAuthTables() {
     }
 
     // 4. Seed default admin user if none exists
-    const adminUsers = await query<any[]>('SELECT id FROM users WHERE role = "admin" OR email = "admin@velocity.com"');
+    const adminUsers = await query<any[]>('SELECT id FROM users WHERE role = "admin"');
     if (adminUsers.length === 0) {
-      const adminId = 'user_admin_velocity';
-      const adminName = 'Velocity Admin';
-      const adminEmail = 'admin@velocity.com';
-      const rawPassword = process.env.ADMIN_PASSWORD || 'meshali'; // Uses meshali or fallback
+      const adminId = 'user_admin_pawanda';
+      const adminName = 'Pawanda Admin';
+      const adminEmail = 'website@pawanda.com';
+      const rawPassword = process.env.ADMIN_PASSWORD || 'Pawanda499%';
       const pwdHash = hashPassword(rawPassword);
       
       await query(
         'INSERT INTO users (id, name, email, password_hash, role) VALUES (?, ?, ?, ?, "admin")',
         [adminId, adminName, adminEmail.toLowerCase(), pwdHash]
       );
-      console.log('[MySQL] Seeded default admin user: admin@velocity.com');
+      console.log('[MySQL] Seeded default admin user: website@pawanda.com');
     }
 
     // 5. Create custom_pages table
