@@ -67,9 +67,9 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 
 // Middlewares
 app.use(cors({
-  origin: function (origin, callback) {
-    // Explicitly echo the origin to support credentials (cookies) cross-origin
-    callback(null, origin || true);
+  origin: (origin, callback) => {
+    // Dynamic origin mirroring with credentials support
+    callback(null, true);
   },
   credentials: true
 }));
