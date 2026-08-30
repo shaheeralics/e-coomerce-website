@@ -195,6 +195,7 @@ app.post('/api/auth/login', async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      domain: process.env.NODE_ENV === 'production' ? '.devsil.com' : undefined,
       path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 7
     });
@@ -204,6 +205,7 @@ app.post('/api/auth/login', async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
+        domain: process.env.NODE_ENV === 'production' ? '.devsil.com' : undefined,
         path: '/',
         maxAge: 1000 * 60 * 60 * 24
       });
@@ -218,8 +220,9 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Logout
 app.post('/api/auth/logout', (req, res) => {
-  res.clearCookie('customer_session');
-  res.clearCookie('admin_session');
+  const cookieOptions = { domain: process.env.NODE_ENV === 'production' ? '.devsil.com' : undefined, path: '/' };
+  res.clearCookie('customer_session', cookieOptions);
+  res.clearCookie('admin_session', cookieOptions);
   res.json({ success: true });
 });
 
