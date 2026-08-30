@@ -220,15 +220,28 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Logout
 app.post('/api/auth/logout', (req, res) => {
-  const cookieOptions = { 
+  // Options for the new cross-subdomain cookie
+  const cookieOptionsWithDomain = { 
     domain: process.env.NODE_ENV === 'production' ? '.devsil.com' : undefined, 
     path: '/',
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax' as const
   };
-  res.clearCookie('customer_session', cookieOptions);
-  res.clearCookie('admin_session', cookieOptions);
+  
+  // Options for the old cookie (before the domain fix was added)
+  const cookieOptionsWithoutDomain = { 
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const
+  };
+
+  // Clear both versions to eliminate zombie cookies
+  res.clearCookie('customer_session', cookieOptionsWithDomain);
+  res.clearCookie('admin_session', cookieOptionsWithDomain);
+  res.clearCookie('customer_session', cookieOptionsWithoutDomain);
+  res.clearCookie('admin_session', cookieOptionsWithoutDomain);
   res.json({ success: true });
 });
 
