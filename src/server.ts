@@ -220,7 +220,13 @@ app.post('/api/auth/login', async (req, res) => {
 
 // Logout
 app.post('/api/auth/logout', (req, res) => {
-  const cookieOptions = { domain: process.env.NODE_ENV === 'production' ? '.devsil.com' : undefined, path: '/' };
+  const cookieOptions = { 
+    domain: process.env.NODE_ENV === 'production' ? '.devsil.com' : undefined, 
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const
+  };
   res.clearCookie('customer_session', cookieOptions);
   res.clearCookie('admin_session', cookieOptions);
   res.json({ success: true });
