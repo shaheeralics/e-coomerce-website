@@ -11,6 +11,14 @@ export function middleware(request: NextRequest) {
 
   // If path is under /admin
   if (pathname.startsWith('/admin')) {
+    // Exclude /admin/login from authentication check
+    if (pathname === '/admin/login') {
+      if (isAuthenticated) {
+        return NextResponse.redirect(new URL('/admin', request.url));
+      }
+      return NextResponse.next();
+    }
+
     // If not authenticated, redirect to the main login page
     if (!isAuthenticated) {
       const loginUrl = new URL('/login', request.url);

@@ -6,6 +6,8 @@ import { LayoutDashboard, ShoppingCart, Package, ArrowUpRight, ShieldCheck, Data
 import { customerLogoutAction } from '@/lib/auth-actions';
 import { useAuth } from '@/lib/context/auth-context';
 
+import { usePathname } from 'next/navigation';
+
 export default function AdminLayout({
   children,
 }: {
@@ -13,12 +15,15 @@ export default function AdminLayout({
 }) {
   const [isDbOnline, setIsDbOnline] = useState(true);
   const { user, loading } = useAuth();
+  const pathname = usePathname();
+  const isLoginPage = pathname === '/admin/login';
 
   useEffect(() => {
+    if (isLoginPage) return;
     if (!loading && (!user || user.role !== 'admin')) {
       window.location.href = '/login';
     }
-  }, [user, loading]);
+  }, [user, loading, isLoginPage]);
 
   // Check database status using backend health/shoes fetch on mount
   useEffect(() => {
@@ -41,6 +46,10 @@ export default function AdminLayout({
     { label: 'Store Locations', href: '/admin/store-locations', icon: MapPin },
     { label: 'Customers', href: '/admin/customers', icon: Users },
   ];
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
 
   if (loading || !user || user.role !== 'admin') {
     return (
